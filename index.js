@@ -33,16 +33,16 @@ app.get("/auth/callback", (req, res) => {
   // part of the code itself. Copy the code (without the #_ portion) so you can use 
   // it in the next step.
 
-  const accessTokenPayload = {
-    app_id: appId,
-    app_secret: appSecret,
-    grant_type: "authorization_code",
-    redirect_uri: redirectUri,
-    code
-  }
-
+  
   if (code) {
     code = code.substring(0, code.length -2)
+    const accessTokenPayload = {
+      app_id: appId,
+      app_secret: appSecret,
+      grant_type: "authorization_code",
+      redirect_uri: redirectUri,
+      code
+    }
     axios.post("https://api.instagram.com/oauth/access_token", accessTokenPayload)
       .then(({access_token, user_id}) => {
         axios.get(
