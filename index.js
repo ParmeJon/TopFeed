@@ -25,6 +25,7 @@ app.get("/auth", (req, res) => {
 
 app.get("/auth/callback", (req, res) => {
   const { code } = req.query
+  const redirectUri = mainAddress + "/auth/callback";
   // IG DOCUMENTATION
   // https://socialsizzle.herokuapp.com/auth/?code=AQDp3TtBQQ...#_
 
@@ -36,6 +37,7 @@ app.get("/auth/callback", (req, res) => {
     app_id: appId,
     app_secret: appSecret,
     grant_type: "authorization_code",
+    redirect_uri: redirectUri,
     code
   }
 
