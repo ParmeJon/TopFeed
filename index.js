@@ -1,3 +1,4 @@
+const dotenv = require('dotenv').config();
 const express = require("express");
 const app = express();
 const oauthRouter = require('./routes/oauth');
@@ -5,7 +6,7 @@ const axios = require('axios');
 const http = require("http");
 const appId = process.env.APP_ID
 const appSecret = process.env.APP_SECRET
-const mainAddress = 'https://igtopfeed.herokuapp.com/'
+const mainAddress = process.env.MAIN_ADDRESS
 
 app.use(express.json());
 app.use(oauthRouter);
@@ -16,13 +17,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/auth", (req, res) => {
-  const redirectUri = mainAddress + 'auth/callback'
+  const redirectUri = mainAddress + '/auth/callback'
   const encodedRedirectUri = encodeURIComponent(redirectUri)
-  const authURI = `https://api.instagram.com/oauth/authorize
-  ?app_id=${appId}
-  &redirect_uri=${encodedRedirectUri}
-  &scope=user_profile,user_media
-  &response_type=code`
+  const authURI = `https://api.instagram.com/oauth/authorize?app_id=${appId}&redirect_uri=${encodedRedirectUri}&scope=user_profile,user_media&response_type=code`
   res.redirect(authURI)
 })
 
