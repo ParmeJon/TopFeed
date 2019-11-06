@@ -38,19 +38,20 @@ app.get("/auth/callback", (req, res) => {
     grant_type: "authorization_code",
     code
   }
+
   if (code) {
-    axios.post("https://api.instagram.com/oauth/access_token", {json: accessTokenPayload})
+    axios.post("https://api.instagram.com/oauth/access_token", accessTokenPayload)
       .then(({access_token, user_id}) => {
         axios.get(
           `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
         ) 
           .then((res) => res.send(res))
           .catch((e) => {
-            res.status(400).send(e)
+            res.status(400).send({err: 'USER INFO REQUEST FAIL'})
           })
       })
       .catch((e) => {
-        res.status(400).send(e)
+        res.status(400).send({err: 'ACCESS_TOKEN POST FAIL'})
       })
   } else {
     res.status(400).send("Missing parameters.")
