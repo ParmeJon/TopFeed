@@ -35,7 +35,8 @@ app.get("/auth/callback", (req, res) => {
 
   
   if (code) {
-    code = code.substring(0, code.length -2)
+    // #_ seems to not be taken into account
+    // code = code.substring(0, code.length -2)
     const accessTokenPayload = {
       app_id: appId,
       app_secret: appSecret,
