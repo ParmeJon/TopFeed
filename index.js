@@ -24,7 +24,7 @@ app.get("/auth", (req, res) => {
 })
 
 app.get("/auth/callback", (req, res) => {
-  const { code } = req.query
+  let { code } = req.query
   const redirectUri = mainAddress + "/auth/callback";
   // IG DOCUMENTATION
   // https://socialsizzle.herokuapp.com/auth/?code=AQDp3TtBQQ...#_
@@ -42,6 +42,7 @@ app.get("/auth/callback", (req, res) => {
   }
 
   if (code) {
+    code = code.substring(0, code.length -2)
     axios.post("https://api.instagram.com/oauth/access_token", accessTokenPayload)
       .then(({access_token, user_id}) => {
         axios.get(
@@ -49,7 +50,7 @@ app.get("/auth/callback", (req, res) => {
         ) 
           .then((res) => res.send(res))
           .catch((e) => {
-            res.status(400).send({err: 'USER INFO REQUEST FAIL'})
+            res.status(400).send(e)
           })
       })
       .catch((e) => {
