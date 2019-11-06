@@ -17,9 +17,10 @@ app.get("/", (req, res) => {
 
 app.get("/auth", (req, res) => {
   const redirectUri = mainAddress + 'auth/callback'
+  const encodedRedirectUri = encodeURIComponent(redirectUri)
   const authURI = `https://api.instagram.com/oauth/authorize
   ?app_id=${appId}
-  &redirect_uri=${encodeURIComponent(redirectUri)}
+  &redirect_uri=${encodedRedirectUri}
   &scope=user_profile,user_media
   &response_type=code`
   res.redirect(authURI)
