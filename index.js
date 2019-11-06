@@ -7,10 +7,13 @@ app.use(express.json());
 app.use(oauthRouter);
 
 app.get("/", (req, res) => {
-  res.send("Hello World!!"); // test message
+  res.sendFile(__dirname + '/index.html');
+  // res.send("Hello World!!"); // test message
 });
 
-
+app.get("/auth", (req, res) => {
+  
+})
 
 const port = process.env.PORT || 5000;
 
