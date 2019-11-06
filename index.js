@@ -50,11 +50,11 @@ app.get("/auth/callback", (req, res) => {
         ) 
           .then((res) => res.send(res))
           .catch((e) => {
-            res.status(400).send(e)
+            res.status(400).send({err: 'GET USER INFO FAIL'})
           })
       })
       .catch((e) => {
-        res.status(400).send({err: 'ACCESS_TOKEN POST FAIL'})
+        res.status(400).send(e)
       })
   } else {
     res.status(400).send("Missing parameters.")
