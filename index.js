@@ -54,21 +54,30 @@ app.get("/auth/callback", (req, res) => {
         code: code
       }
     };
+
+    firstReq(options)
     
-    httpRequest(options, function (err, response, body) {
+    const firstReq = function (options) {
+      httpRequest(options, function (err, response, body) {
       if (!err && response.statusCode == 200) {
         const { access_token, user_id } = JSON.parse(body);
-        httpRequest(`https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`, function(err, response, body) {
-          if (!err && response.statusCode == 200) {
-            res.status(200).send(body)
-          } else {
-            res.status(400)
-          }
-        })
-      } else {
-        res.status(400)
-      }
-    })
+        const newOptions = `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`;
+        secondReq(newOptions)
+        } else {
+          res.status(400)
+        }
+      })
+    }
+
+    const secondReq = function(newOptions) {
+      httpRequest(newOptions, function (err, response, body) {
+        if (!err && response.statusCode == 200) {
+          res.status(200).send(body)
+        } else {
+          res.status(400)
+        }
+      })
+    }
     // ONLY ACCEPTS x-www-form-urlencoded ?
     // const formattedPayload = querystring.stringify(accessTokenPayload)
     // axios.post("https://api.instagram.com/oauth/access_token", formattedPayload)
