@@ -44,6 +44,8 @@ app.get("/auth/callback", (req, res) => {
       redirect_uri: redirectUri,
       code
     }
+
+    // ONLY ACCEPTS x-www-form-urlencoded
     axios.post("https://api.instagram.com/oauth/access_token", querystring.stringify(accessTokenPayload))
       .then(({access_token, user_id}) => {
         axios.get(
@@ -51,7 +53,7 @@ app.get("/auth/callback", (req, res) => {
         ) 
           .then((res) => res.send(res))
           .catch((e) => {
-            res.status(400).send({err: 'GET USER INFO FAIL'})
+            res.status(400).send({err: 'GET USER INFO FAIL', access_token, user_id})
           })
       })
       .catch((e) => {
