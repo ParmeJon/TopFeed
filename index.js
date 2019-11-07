@@ -38,8 +38,8 @@ app.get("/auth/callback", (req, res) => {
     // #_ seems to not be taken into account
     // code = code.substring(0, code.length -2)
     const accessTokenPayload = {
-      client_id: appId,
-      client_secret: appSecret,
+      app_id: appId,
+      app_secret: appSecret,
       grant_type: "authorization_code",
       redirect_uri: redirectUri,
       code
