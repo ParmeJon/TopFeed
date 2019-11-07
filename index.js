@@ -58,7 +58,7 @@ app.get("/auth/callback", (req, res) => {
         //   })
       })
       .catch((e) => {
-        res.status(400).send(e)
+        res.status(400).send({err: "POST FAIL"})
       })
   } else {
     res.status(400).send("Missing parameters.")
