@@ -53,20 +53,6 @@ app.get("/auth/callback", (req, res) => {
         redirect_uri: redirectUri,
         code: code
       }
-    };
-
-    const firstReq = function (options) {
-      httpRequest(options, function (err, response, body) {
-      if (!err && response.statusCode == 200) {
-        const { access_token, user_id } = JSON.parse(body);
-        console.log(access_token, user_id)
-        const newOptions = `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`;
-        // secondReq(newOptions)
-        res.status(200).send(body)
-        } else {
-          res.status(400)
-        }
-      })
     }
 
     const secondReq = function(newOptions) {
@@ -79,7 +65,21 @@ app.get("/auth/callback", (req, res) => {
       })
     }
 
-    firstReq(options)
+      httpRequest(options, function (err, response, body) {
+      if (!err && response.statusCode == 200) {
+        const { access_token, user_id } = JSON.parse(body);
+        console.log(access_token, user_id)
+        const newOptions = {
+          url: `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
+        }
+        secondReq(newOptions)
+        // res.status(200).send({body, newOptions})
+        } else {
+          res.status(400)
+        }
+      })
+      
+
     
     // ONLY ACCEPTS x-www-form-urlencoded ?
     // const formattedPayload = querystring.stringify(accessTokenPayload)
