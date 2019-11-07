@@ -57,8 +57,8 @@ app.get("/auth/callback", (req, res) => {
 
       httpRequest(options, function (err, response, body) {
       if (!err && response.statusCode == 200) {
+        console.log(body)
         const { access_token, user_id } = JSON.parse(body);
-        console.log(access_token, user_id)
         const newOptions = {
           url: `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
         }
