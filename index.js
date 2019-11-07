@@ -53,7 +53,7 @@ app.get("/auth/callback", (req, res) => {
         ) 
           .then((res) => res.send(res))
           .catch((e) => {
-            res.status(400).send({err: 'GET USER INFO FAIL', access_token, user_id})
+            res.status(400).send({err: 'GET USER INFO FAIL', access_token: access_token, user_id: user_id})
           })
       })
       .catch((e) => {
