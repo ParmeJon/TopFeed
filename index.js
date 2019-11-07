@@ -38,13 +38,12 @@ app.get("/auth/callback", (req, res) => {
     // #_ seems to not be taken into account
     // code = code.substring(0, code.length -2)
     const accessTokenPayload = {
-      app_id: appId,
-      app_secret: appSecret,
+      client_id: appId,
+      client_secret: appSecret,
       grant_type: "authorization_code",
       redirect_uri: redirectUri,
       code
     }
-    console.log(accessTokenPayload)
     // ONLY ACCEPTS x-www-form-urlencoded ?
     axios.post("https://api.instagram.com/oauth/access_token", querystring.stringify(accessTokenPayload))
       .then((axiosResponse) => {
