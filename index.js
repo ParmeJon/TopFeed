@@ -55,8 +55,6 @@ app.get("/auth/callback", (req, res) => {
       }
     };
 
-    firstReq(options)
-    
     const firstReq = function (options) {
       httpRequest(options, function (err, response, body) {
       if (!err && response.statusCode == 200) {
@@ -78,6 +76,9 @@ app.get("/auth/callback", (req, res) => {
         }
       })
     }
+    
+    firstReq(options)
+    
     // ONLY ACCEPTS x-www-form-urlencoded ?
     // const formattedPayload = querystring.stringify(accessTokenPayload)
     // axios.post("https://api.instagram.com/oauth/access_token", formattedPayload)
