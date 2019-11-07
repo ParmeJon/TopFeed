@@ -55,16 +55,6 @@ app.get("/auth/callback", (req, res) => {
       }
     }
 
-    const secondReq = function(newOptions) {
-      httpRequest(newOptions, function (err, response, body) {
-        if (!err && response.statusCode == 200) {
-          res.status(200).send(body)
-        } else {
-          res.status(400)
-        }
-      })
-    }
-
       httpRequest(options, function (err, response, body) {
       if (!err && response.statusCode == 200) {
         const { access_token, user_id } = JSON.parse(body);
@@ -72,7 +62,8 @@ app.get("/auth/callback", (req, res) => {
         const newOptions = {
           url: `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
         }
-        secondReq(newOptions)
+        // secondReq(newOptions)
+        res.redirect(newOptions.url)
         // res.status(200).send({body, newOptions})
         } else {
           res.status(400)
