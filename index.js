@@ -4,6 +4,7 @@ const app = express();
 const oauthRouter = require('./routes/oauth');
 const axios = require('axios');
 const http = require("http");
+const querystring = require('querystring');
 const appId = process.env.APP_ID
 const appSecret = process.env.APP_SECRET
 const mainAddress = process.env.MAIN_ADDRESS
@@ -32,7 +33,6 @@ app.get("/auth/callback", (req, res) => {
   // Note that #_ has been appended to the end of the redirect URI, but it is not 
   // part of the code itself. Copy the code (without the #_ portion) so you can use 
   // it in the next step.
-
   
   if (code) {
     // #_ seems to not be taken into account
@@ -44,7 +44,7 @@ app.get("/auth/callback", (req, res) => {
       redirect_uri: redirectUri,
       code
     }
-    axios.post("https://api.instagram.com/oauth/access_token", accessTokenPayload)
+    axios.post("https://api.instagram.com/oauth/access_token", querystring.stringify(accessTokenPayload))
       .then(({access_token, user_id}) => {
         axios.get(
           `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
