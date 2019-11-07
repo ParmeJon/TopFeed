@@ -59,6 +59,7 @@ app.get("/auth/callback", (req, res) => {
       httpRequest(options, function (err, response, body) {
       if (!err && response.statusCode == 200) {
         const { access_token, user_id } = JSON.parse(body);
+        console.log(access_token, user_id)
         const newOptions = `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`;
         secondReq(newOptions)
         } else {
@@ -76,7 +77,7 @@ app.get("/auth/callback", (req, res) => {
         }
       })
     }
-    
+
     firstReq(options)
     
     // ONLY ACCEPTS x-www-form-urlencoded ?
