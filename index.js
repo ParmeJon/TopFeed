@@ -57,8 +57,12 @@ app.get("/auth/callback", (req, res) => {
     };
     httpRequest(options, function (err, response, body) {
       if (!err && response.statusCode == 200) {
-        const user = JSON.parse(body);
-        res.status(200).send(user)
+        const { access_token, user_id } = JSON.parse(body);
+          axios.get(`https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`) 
+          .then((res) => res.send(res))
+          .catch((e) => {
+            res.status(400).send({err: 'GET USER INFO FAIL', access_token: access_token, user_id: user_id, test: "testing"})
+          })
       }
     })
     // ONLY ACCEPTS x-www-form-urlencoded ?
