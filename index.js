@@ -57,11 +57,11 @@ app.get("/auth/callback", (req, res) => {
 
       httpRequest(options, function (err, response, body) {
       if (!err && response.statusCode == 200) {
-        console.log(body)
+        console.log(body.toString())
         // FOR SOME REASON JSON.parse is converting original body ID wrong.
-        const access_token = body["access_token"]
-        const user_id = parseInt(body["user_id"])
-        // const { access_token, user_id } = (JSON.stringify(body);
+        // This is due to the body user_id being returned as an integer
+        // converting too large of a number with js causes incorrect conversion
+        const { access_token, user_id } = JSON.parse(body.toString());
         const newOptions = {
           url: `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
         }
