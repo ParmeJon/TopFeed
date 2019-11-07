@@ -47,14 +47,15 @@ app.get("/auth/callback", (req, res) => {
 
     // ONLY ACCEPTS x-www-form-urlencoded
     axios.post("https://api.instagram.com/oauth/access_token", querystring.stringify(accessTokenPayload))
-      .then(({access_token, user_id}) => {
-        axios.get(
-          `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
-        ) 
-          .then((res) => res.send(res))
-          .catch((e) => {
-            res.status(400).send({err: 'GET USER INFO FAIL', access_token: access_token, user_id: user_id})
-          })
+      .then((res) => {
+        res.status(200).send(res)
+        // axios.get(
+        //   `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
+        // ) 
+        //   .then((res) => res.send(res))
+        //   .catch((e) => {
+        //     res.status(400).send({err: 'GET USER INFO FAIL', access_token: access_token, user_id: user_id, test: "testing"})
+        //   })
       })
       .catch((e) => {
         res.status(400).send(e)
