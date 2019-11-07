@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const oauthRouter = require('./routes/oauth');
 const httpRequest = require("request");
+const JSONbig = require('json-bigint');
 const querystring = require('querystring');
 const appId = process.env.APP_ID
 const appSecret = process.env.APP_SECRET
@@ -57,11 +58,10 @@ app.get("/auth/callback", (req, res) => {
 
       httpRequest(options, function (err, response, body) {
       if (!err && response.statusCode == 200) {
-        console.log(body.toString())
         // FOR SOME REASON JSON.parse is converting original body ID wrong.
         // This is due to the body user_id being returned as an integer
         // converting too large of a number with js causes incorrect conversion
-        const { access_token, user_id } = JSON.parse(body.toString());
+        const { access_token, user_id } = JSONbig.parse(body);
         const newOptions = {
           url: `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
         }
