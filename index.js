@@ -44,11 +44,11 @@ app.get("/auth/callback", (req, res) => {
       redirect_uri: redirectUri,
       code
     }
-
+    console.log(accessTokenPayload)
     // ONLY ACCEPTS x-www-form-urlencoded ?
     axios.post("https://api.instagram.com/oauth/access_token", querystring.stringify(accessTokenPayload))
       .then((axiosResponse) => {
-        res.status(200).send({response: axiosResponse, note: "RESPONSE FROM POST"})
+        return res.status(200).send({response: axiosResponse, note: "RESPONSE FROM POST"})
         // axios.get(
         //   `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
         // ) 
