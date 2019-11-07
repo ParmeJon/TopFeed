@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const oauthRouter = require('./routes/oauth');
 const axios = require('axios');
-const http = require("http");
+const httpRequest = require("request");
 const querystring = require('querystring');
 const appId = process.env.APP_ID
 const appSecret = process.env.APP_SECRET
@@ -44,22 +44,38 @@ app.get("/auth/callback", (req, res) => {
       'redirect_uri': redirectUri,
       'code': code
     }
-    console.log(accessTokenPayload)
-    const formattedPayload = querystring.stringify(accessTokenPayload)
+    const options = {
+      url: "https://api.instagram.com/oauth/access_token",
+      method: "POST",
+      form: {
+        app_id: appId,
+        app_secret: appSecret,
+        grant_type: "authorization_code",
+        redirect_uri: redirectUri,
+        code: code
+      }
+    };
+    httpRequest(options, function (err, response, body) {
+      if (!err && response.statusCode == 200) {
+        const user = JSON.parse(body);
+        res.status(200).send(user)
+      }
+    })
     // ONLY ACCEPTS x-www-form-urlencoded ?
-    axios.post("https://api.instagram.com/oauth/access_token", formattedPayload)
-      .then((axiosResponse) => {
-        return res.status(200).send({response: axiosResponse, note: "RESPONSE FROM POST"})
-        // axios.get(
-        //   `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
-        // ) 
-        //   .then((res) => res.send(res))
-        //   .catch((e) => {
-        //     res.status(400).send({err: 'GET USER INFO FAIL', access_token: access_token, user_id: user_id, test: "testing"})
-        //   })
-      }).catch((e) => {
-        res.status(400).send({err: "POST FAIL", e})
-      })
+    // const formattedPayload = querystring.stringify(accessTokenPayload)
+    // axios.post("https://api.instagram.com/oauth/access_token", formattedPayload)
+    //   .then((axiosResponse) => {
+    //     return res.status(200).send({response: axiosResponse, note: "RESPONSE FROM POST"})
+    //     // axios.get(
+    //     //   `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
+    //     // ) 
+    //     //   .then((res) => res.send(res))
+    //     //   .catch((e) => {
+    //     //     res.status(400).send({err: 'GET USER INFO FAIL', access_token: access_token, user_id: user_id, test: "testing"})
+    //     //   })
+    //   }).catch((e) => {
+    //     res.status(400).send({err: "POST FAIL", e})
+    //   })
   } else {
     res.status(400).send("Missing parameters.")
   }
