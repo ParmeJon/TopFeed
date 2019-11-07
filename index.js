@@ -44,9 +44,12 @@ app.get("/auth/callback", (req, res) => {
       redirect_uri: redirectUri,
       code
     }
+    const formattedPayload = querystring.stringify(accessTokenPayload)
     // ONLY ACCEPTS x-www-form-urlencoded ?
-    axios.post("https://api.instagram.com/oauth/access_token", querystring.stringify(accessTokenPayload))
-      .then((axiosResponse) => {
+    axios.post("https://api.instagram.com/oauth/access_token", formattedPayload, { headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+      }
+    }).then((axiosResponse) => {
         return res.status(200).send({response: axiosResponse, note: "RESPONSE FROM POST"})
         // axios.get(
         //   `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
@@ -55,16 +58,13 @@ app.get("/auth/callback", (req, res) => {
         //   .catch((e) => {
         //     res.status(400).send({err: 'GET USER INFO FAIL', access_token: access_token, user_id: user_id, test: "testing"})
         //   })
-      })
-      .catch((e) => {
-        res.status(400).send({err: "POST FAIL"})
+      }).catch((e) => {
+        res.status(400).send({err: "POST FAIL", e})
       })
   } else {
     res.status(400).send("Missing parameters.")
   }
 })
-
-
 
 const port = process.env.PORT || 5000;
 
