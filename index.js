@@ -54,21 +54,19 @@ app.get("/auth/callback", (req, res) => {
         code: code
       }
     };
-
+    
     httpRequest(options, function (err, response, body) {
       if (!err && response.statusCode == 200) {
-        const { access_token, user_id } = body;
-        console.log("BODY", body)
-        console.log(access_token, user_id)
-        options2 = {
-          url: `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`,
-          method: "GET"
-        };
-          httpRequest(options2, function (err, response, body) {
-            if (!err && response.statusCode == 200) {
-              res.status(200).send(body)
-            }
-          })
+        const { access_token, user_id } = JSON.parse(body);
+        httpRequest(`https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`, function(err, response, body) {
+          if (!err && response.statusCode == 200) {
+            res.status(200).send(body)
+          } else {
+            res.status(400)
+          }
+        })
+      } else {
+        res.status(400)
       }
     })
     // ONLY ACCEPTS x-www-form-urlencoded ?
