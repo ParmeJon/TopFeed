@@ -44,12 +44,11 @@ app.get("/auth/callback", (req, res) => {
       redirect_uri: redirectUri,
       code
     }
-    const formattedPayload = querystring.stringify(accessTokenPayload)
+    console.log(accessTokenPayload)
+    // const formattedPayload = querystring.stringify(accessTokenPayload)
     // ONLY ACCEPTS x-www-form-urlencoded ?
-    axios.post("https://api.instagram.com/oauth/access_token", formattedPayload, { headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-      }
-    }).then((axiosResponse) => {
+    axios.post("https://api.instagram.com/oauth/access_token", accessTokenPayload)
+      .then((axiosResponse) => {
         return res.status(200).send({response: axiosResponse, note: "RESPONSE FROM POST"})
         // axios.get(
         //   `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
