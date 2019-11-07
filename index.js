@@ -45,10 +45,10 @@ app.get("/auth/callback", (req, res) => {
       code
     }
 
-    // ONLY ACCEPTS x-www-form-urlencoded
+    // ONLY ACCEPTS x-www-form-urlencoded ?
     axios.post("https://api.instagram.com/oauth/access_token", querystring.stringify(accessTokenPayload))
       .then((res) => {
-        res.status(200).send(res)
+        res.status(200).send({res: res, note: "RESPONSE FROM POST"})
         // axios.get(
         //   `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
         // ) 
