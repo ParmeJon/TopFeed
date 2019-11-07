@@ -2,7 +2,6 @@ const dotenv = require('dotenv').config();
 const express = require("express");
 const app = express();
 const oauthRouter = require('./routes/oauth');
-const axios = require('axios');
 const httpRequest = require("request");
 const querystring = require('querystring');
 const appId = process.env.APP_ID
@@ -58,10 +57,15 @@ app.get("/auth/callback", (req, res) => {
     httpRequest(options, function (err, response, body) {
       if (!err && response.statusCode == 200) {
         const { access_token, user_id } = JSON.parse(body);
-          axios.get(`https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`) 
-          .then((res) => res.send(res))
-          .catch((e) => {
-            res.status(400).send({err: 'GET USER INFO FAIL', access_token: access_token, user_id: user_id, test: "testing"})
+        console.log(access_token, user_id)
+        options2 = {
+          url: `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`,
+          method: "GET"
+        };
+          httpRequest(options2, function (err, response, body) {
+            if (!err && response.statusCode == 200) {
+              res.status(200).send(body)
+            }
           })
       }
     })
