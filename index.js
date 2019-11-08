@@ -56,22 +56,22 @@ app.get("/auth/callback", (req, res) => {
       }
     }
 
-      httpRequest(options, function (err, response, body) {
-      if (!err && response.statusCode == 200) {
-        // FOR SOME REASON JSON.parse is converting original body ID wrong.
-        // This is due to the body user_id being returned as an integer
-        // converting too large of a number with js causes incorrect conversion
-        const { access_token, user_id } = JSONbig.parse(body);
-        const newOptions = {
-          url: `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
-        }
-        // secondReq(newOptions)
-        res.redirect(newOptions.url)
-        // res.status(200).send({body, newOptions})
-        } else {
-          res.status(400)
-        }
-      })
+      httpRequest(options)
+        .on('data', function(data) {
+          // original JSON.parse is converting original body ID wrong.
+          // This is due to the body user_id being returned as an integer
+          // converting too large of a number with js causes incorrect conversion
+          const { access_token, user_id } = data;
+          const newOptions = {
+            url: `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
+          }
+          httpRequest(newOptions)
+            .on('data', function(data) {
+              res.status(200).send(data)
+            })
+          // res.redirect(newOptions.url)
+          // res.status(200).send({body, newOptions})
+        })
       
 
     
