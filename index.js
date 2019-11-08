@@ -37,13 +37,13 @@ app.get("/auth/callback", (req, res) => {
   if (code) {
     // #_ seems to not be taken into account
     // code = code.substring(0, code.length -2)
-    // const accessTokenPayload = {
-    //   'app_id': appId,
-    //   'app_secret': appSecret,
-    //   'grant_type': "authorization_code",
-    //   'redirect_uri': redirectUri,
-    //   'code': code
-    // }
+    const accessTokenPayload = {
+      'app_id': appId,
+      'app_secret': appSecret,
+      'grant_type': "authorization_code",
+      'redirect_uri': redirectUri,
+      'code': code
+    }
     const options = {
       url: "https://api.instagram.com/oauth/access_token",
       method: "POST",
@@ -56,23 +56,29 @@ app.get("/auth/callback", (req, res) => {
       }
     }
 
-      httpRequest(options)
-        .on('response', function(response) {
-          // original JSON.parse is converting original body ID wrong.
-          // This is due to the body user_id being returned as an integer
-          // converting too large of a number with js causes incorrect conversion
-          console.log('response', response)
-          const { access_token, user_id } = response.data;
-          const newOptions = {
-            url: `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
+      httpRequest(options, function (err, response, body) {
+      if (!err && response.statusCode == 200) {
+        // FOR SOME REASON JSON.parse is converting original body ID wrong.
+        // This is due to the body user_id being returned as an integer
+        // converting too large of a number with js causes incorrect conversion
+        const { access_token, user_id } = JSONbig.parse(body);
+        const newOptions = {
+          url: `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
+        }
+        httpRequest(newOptions, function(err, response, body) {
+          if (!err && response.statusCode == 200) {
+            const info = JSONbig.parse(body)
+            res.status(200).send(info)
+          } else {
+            res.status(400)
           }
-          httpRequest(newOptions)
-            .on('response', function(response) {
-              res.status(200).send({response})
-            })
-          // res.redirect(newOptions.url)
-          // res.status(200).send({body, newOptions})
         })
+        // res.redirect(newOptions.url)
+        // res.status(200).send({body, newOptions})
+        } else {
+          res.status(400)
+        }
+      })
       
 
     
