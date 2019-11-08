@@ -67,7 +67,7 @@ app.get("/auth/callback", (req, res) => {
           }
           httpRequest(newOptions)
             .on('data', function(data) {
-              res.status(200).send(data)
+              res.status(200).send({data})
             })
           // res.redirect(newOptions.url)
           // res.status(200).send({body, newOptions})
