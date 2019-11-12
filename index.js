@@ -63,7 +63,7 @@ app.get("/auth/callback", (req, res) => {
         // converting too large of a number with js causes incorrect conversion
         const { access_token, user_id } = JSONbig.parse(body);
         const userIdLink = `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`;
-        const mediaLink = `https://graph.instagram.com/me/media?fields=id,caption,media_url,media_type,likes&access_token=${access_token}`;
+        const mediaLink = `https://graph.instagram.com/me/media?fields=id,caption,media_url,media_type,permalink,like_count&access_token=${access_token}`;
         const newOptions = {
           url: mediaLink
         }
