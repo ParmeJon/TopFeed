@@ -1,4 +1,5 @@
 const dotenv = require('dotenv').config();
+const path = require('path')
 const express = require("express");
 const app = express();
 const oauthRouter = require('./routes/oauth');
@@ -9,11 +10,11 @@ const appId = process.env.APP_ID
 const appSecret = process.env.APP_SECRET
 const mainAddress = process.env.MAIN_ADDRESS
 
-app.use(express.json());
+app.use(express.static(path.join(__dirname, './client')));
 app.use(oauthRouter);
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.render('index')
   // res.send("Hello World!!"); // test message
 });
 
