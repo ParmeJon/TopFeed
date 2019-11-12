@@ -62,8 +62,10 @@ app.get("/auth/callback", (req, res) => {
         // This is due to the body user_id being returned as an integer
         // converting too large of a number with js causes incorrect conversion
         const { access_token, user_id } = JSONbig.parse(body);
+        const userIdLink = `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`;
+        const mediaLink = `https://graph.instagram.com/me/media?fields=id,caption&access_token=${access_token}`;
         const newOptions = {
-          url: `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`
+          url: mediaLink
         }
         httpRequest(newOptions, function(err, response, body) {
           if (!err && response.statusCode == 200) {
