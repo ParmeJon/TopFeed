@@ -47,7 +47,7 @@ app.get("/auth/callback", (req, res) => {
         app_id: appId,
         app_secret: appSecret,
         grant_type: "authorization_code",
-        redirect_uri: mainAddress,
+        redirect_uri: redirectUri,
         code: code
       }
     }
@@ -59,7 +59,7 @@ app.get("/auth/callback", (req, res) => {
         // converting too large of a number with js causes incorrect conversion
         const { access_token, user_id } = JSONbig.parse(body);
         // res.redirect(mainAddress + '/?' + `access_token=${access_token}`)
-
+        
         const userIdLink = `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`;
         const mediaLink = `https://graph.instagram.com/me/media?fields=id,caption,media_url,media_type,permalink,like_count&access_token=${access_token}`;
         const newOptions = {
