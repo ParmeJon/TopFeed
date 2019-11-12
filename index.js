@@ -63,28 +63,26 @@ app.get("/auth/callback", (req, res) => {
         // This is due to the body user_id being returned as an integer
         // converting too large of a number with js causes incorrect conversion
         const { access_token, user_id } = JSONbig.parse(body);
-        const userIdLink = `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`;
-        const mediaLink = `https://graph.instagram.com/me/media?fields=id,caption,media_url,media_type,permalink,like_count&access_token=${access_token}`;
-        const newOptions = {
-          url: mediaLink
-        }
-        httpRequest(newOptions, function(err, response, body) {
-          if (!err && response.statusCode == 200) {
-            const info = JSONbig.parse(body)
-            res.status(200).send(info)
-          } else {
-            res.status(400)
-          }
-        })
-        // res.redirect(newOptions.url)
-        // res.status(200).send({body, newOptions})
+        res.redirect(mainAddress + '/?' + `access_token=${access_token}`)
+
+        // const userIdLink = `https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`;
+        // const mediaLink = `https://graph.instagram.com/me/media?fields=id,caption,media_url,media_type,permalink,like_count&access_token=${access_token}`;
+        // const newOptions = {
+        //   url: mediaLink
+        // }
+        // httpRequest(newOptions, function(err, response, body) {
+        //   if (!err && response.statusCode == 200) {
+        //     const info = JSONbig.parse(body)
+        //     res.status(200).send(info)
+        //   } else {
+        //     res.status(400)
+        //   }
+        // })
         } else {
           res.status(400)
         }
       })
       
-
-    
     // ONLY ACCEPTS x-www-form-urlencoded ?
     // const formattedPayload = querystring.stringify(accessTokenPayload)
     // axios.post("https://api.instagram.com/oauth/access_token", formattedPayload)
