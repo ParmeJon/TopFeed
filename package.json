@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
+    "client": "npm run start --prefix topfeed-client",
+    "dev": "concurrently \"nodemon index.js\" \"npm run client\"",
     "heroku-postbuild": "cd topfeed-client && npm install --only=dev && npm install && npm run build"
   },
   "author": "",
@@ -18,6 +19,7 @@
     "request": "^2.88.0"
   },
   "devDependencies": {
+    "concurrently": "^5.0.0",
     "nodemon": "^1.19.4"
   }
 }
