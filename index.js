@@ -10,13 +10,8 @@ const appId = process.env.APP_ID
 const appSecret = process.env.APP_SECRET
 const mainAddress = process.env.MAIN_ADDRESS
 
-app.use(express.static(path.join(__dirname, './client')));
+app.use(express.static(path.join(__dirname, './topfeed-client/build')));
 app.use(oauthRouter);
-
-app.get("/", (req, res) => {
-  res.render('index')
-  // res.send("Hello World!!"); // test message
-});
 
 app.get("/auth", (req, res) => {
   const redirectUri = mainAddress + '/auth/callback'
@@ -102,6 +97,10 @@ app.get("/auth/callback", (req, res) => {
     res.status(400).send("Missing parameters.")
   }
 })
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/topfeed-client/build/index.html"));
+});
 
 const port = process.env.PORT || 5000;
 
